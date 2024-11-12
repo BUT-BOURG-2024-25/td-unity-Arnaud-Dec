@@ -63,7 +63,7 @@ public class input_horizontal_vertical : MonoBehaviour
 
         if (moveWithJoystick)
         {
-            Vector3 joystickDirection = new Vector3(UiManager.instance.Joystick.Direction.x, 0.0f, UiManager.instance.Joystick.Direction.y);
+            Vector3 joystickDirection = new Vector3(UiManager.Instance.Joystick.Direction.x, 0.0f, UiManager.Instance.Joystick.Direction.y);
             Vector3 NewVelocity = joystickDirection * speed;
             NewVelocity.y = physicsBody.velocity.y;
             physicsBody.velocity = NewVelocity;

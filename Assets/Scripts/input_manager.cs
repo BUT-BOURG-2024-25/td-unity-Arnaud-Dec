@@ -7,12 +7,12 @@ using UnityEngine.InputSystem.EnhancedTouch;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 
-public class input_manager : MonoBehaviour
+public class input_manager : Singleton<input_manager>
 {
+   
+
     [SerializeField]
     private InputActionReference MovementAction = null;
-    
-    private static input_manager _instance = null;
 
     [SerializeField]
     private InputActionReference JumpAction = null;
@@ -20,26 +20,13 @@ public class input_manager : MonoBehaviour
     [SerializeField]
     private InputActionReference MousePositionAction = null;
 
-    public static input_manager Instance
-    {
-        get { return _instance; }
-    }
+    
 
     public UnityEngine.Vector3 MovementInput { get; private set; }
 
     public Action<Vector2> FingerDownAction = null;
 
-    private void Awake()
-    {
-        if (_instance == null)
-        {
-            _instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
+    
 
     public void RegisterOnJumpInput(Action<InputAction.CallbackContext> OnJumpAction , bool register)
     {
@@ -85,7 +72,7 @@ public class input_manager : MonoBehaviour
     private void OnfingerDown(Finger finger)
     {
         Vector2 screenPosTouch = finger.screenPosition;
-        RectTransform joystickRec = UiManager.instance.Joystick.transform as RectTransform;
+        RectTransform joystickRec = UiManager.Instance.Joystick.transform as RectTransform;
 
         bool isInX = joystickRec.offsetMin.x <= screenPosTouch.x && screenPosTouch.x <= joystickRec.offsetMax.x;
         bool isInY = joystickRec.offsetMin.y <= screenPosTouch.y && screenPosTouch.y <= joystickRec.offsetMax.y;
