@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,20 +16,29 @@ public class SpawnCubeOnMouseClick : MonoBehaviour
     [SerializeField]
     private GameObject objectToSpawn;
 
+
+  
+
     private void Start()
     {
         input_manager.Instance.RegisterOnClick(onCLick, true);
-
+        input_manager.Instance.FingerDownAction += OnFingerDown;
     }
 
     private void OnDestroy()
     {
         input_manager.Instance.RegisterOnClick(onCLick, false);
+        input_manager.Instance.FingerDownAction -= OnFingerDown;
     }
 
-    private void onCLick(InputAction.CallbackContext callbackContext)
+    private void OnFingerDown(Vector2 screenPosition)
     {
-       Ray cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        SpawnCube(screenPosition);
+    }
+
+    private void SpawnCube(Vector2 screenPosition)
+    {
+        Ray cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         RaycastHit hitInfo;
 
@@ -36,8 +46,13 @@ public class SpawnCubeOnMouseClick : MonoBehaviour
 
         if (raycastHasHit && objectToSpawn != null)
         {
-            GameObject.Instantiate(objectToSpawn, hitInfo.point + Vector3.up *0.5f, Quaternion.identity);
+            GameObject.Instantiate(objectToSpawn, hitInfo.point + Vector3.up * 0.5f, Quaternion.identity);
         }
+    }
+
+    private void onCLick(InputAction.CallbackContext callbackContext)
+    {
+        SpawnCube(Input.mousePosition);
     }
 
 }

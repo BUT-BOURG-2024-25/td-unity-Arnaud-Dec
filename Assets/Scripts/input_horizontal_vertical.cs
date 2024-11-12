@@ -20,7 +20,6 @@ public class input_horizontal_vertical : MonoBehaviour
     {
         input_manager.Instance.RegisterOnJumpInput(Jump, true);
 
-
     }
 
     private void onDestroy()
@@ -31,7 +30,10 @@ public class input_horizontal_vertical : MonoBehaviour
 
     private void Jump(InputAction.CallbackContext callbackContext)
     {
-        physicsBody.AddForce(Vector3.up * jumpPower);
+        if (physicsBody != null)
+        {
+            physicsBody.AddForce(Vector3.up * jumpPower);
+        }
     }
 
     

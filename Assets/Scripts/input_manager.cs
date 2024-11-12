@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Numerics;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.EnhancedTouch;
+using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 
 public class input_manager : MonoBehaviour
@@ -25,6 +26,8 @@ public class input_manager : MonoBehaviour
     }
 
     public UnityEngine.Vector3 MovementInput { get; private set; }
+
+    public Action<Vector2> FingerDownAction = null;
 
     private void Awake()
     {
@@ -63,12 +66,42 @@ public class input_manager : MonoBehaviour
     }
 
 
-
-
-
     private void Update()
     {
         UnityEngine.Vector2 Movement = MovementAction.action.ReadValue<UnityEngine.Vector2>();
         MovementInput = new UnityEngine.Vector3(Movement.x, 0, Movement.y);
+    }
+
+
+
+    public void OnEnable()
+    {
+        TouchSimulation.Enable();
+        EnhancedTouchSupport.Enable();
+
+        Touch.onFingerDown += OnfingerDown;
+    }
+
+    private void OnfingerDown(Finger finger)
+    {
+        Vector2 screenPosTouch = finger.screenPosition;
+        RectTransform joystickRec = UiManager.instance.Joystick.transform as RectTransform;
+
+        bool isInX = joystickRec.offsetMin.x <= screenPosTouch.x && screenPosTouch.x <= joystickRec.offsetMax.x;
+        bool isInY = joystickRec.offsetMin.y <= screenPosTouch.y && screenPosTouch.y <= joystickRec.offsetMax.y;
+
+        if (!isInX || !isInY)
+        {
+            FingerDownAction.Invoke(screenPosTouch);
+        }
+        
+    }
+
+    public void OnDisable()
+    {
+        Touch.onFingerDown -= OnfingerDown;
+
+        EnhancedTouchSupport.Disable();
+        TouchSimulation.Disable();
     }
 }
