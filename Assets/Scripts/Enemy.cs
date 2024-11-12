@@ -24,6 +24,14 @@ public class Enemy : MonoBehaviour
             // Déplacer l'ennemi vers le joueur
             Vector3 direction = (player.transform.position - transform.position).normalized;
             transform.position += direction * speed * Time.deltaTime;
+
+            // Tourner l'ennemi pour qu'il regarde le joueur
+
+            Vector3 lookat = player.transform.position;
+            lookat.y = transform.position.y;
+
+            transform.LookAt(lookat , Vector3.up);
+
         }
     }
 
