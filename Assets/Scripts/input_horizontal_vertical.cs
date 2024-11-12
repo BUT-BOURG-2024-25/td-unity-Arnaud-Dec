@@ -13,6 +13,8 @@ public class input_horizontal_vertical : MonoBehaviour
     private Rigidbody physicsBody;
     [SerializeField]
     private float jumpPower = 5;
+    [SerializeField]
+    private bool moveWithJoystick = false;
 
     private void Start()
     {
@@ -56,8 +58,22 @@ public class input_horizontal_vertical : MonoBehaviour
 
 
         //3 
-        Vector3 NewVelocity = input_manager.Instance.MovementInput * speed;
-        NewVelocity.y = physicsBody.velocity.y;
-        physicsBody.velocity = NewVelocity;
-    }   
+
+        if (moveWithJoystick)
+        {
+            Vector3 joystickDirection = new Vector3(UiManager.instance.Joystick.Direction.x, 0.0f, UiManager.instance.Joystick.Direction.y);
+            Vector3 NewVelocity = joystickDirection * speed;
+            NewVelocity.y = physicsBody.velocity.y;
+            physicsBody.velocity = NewVelocity;
+
+        }
+        else
+        {
+            Vector3 NewVelocity = input_manager.Instance.MovementInput * speed;
+            NewVelocity.y = physicsBody.velocity.y;
+            physicsBody.velocity = NewVelocity;
+        }
+
+
+        }   
 }
